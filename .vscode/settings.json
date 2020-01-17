@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "camera": "cpp",
+        "graphicscontext": "cpp",
+        "viewport": "cpp"
+    }
+}
