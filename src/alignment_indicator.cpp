@@ -10,9 +10,21 @@
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr refCloudPTR(new pcl::PointCloud<pcl::PointXYZ>);
 
+
+void print4x4Matrix (const Eigen::Matrix4f & matrix)
+{
+  // printf ("Rotation matrix :\n");
+  // printf ("    | %6.3f %6.3f %6.3f | \n", matrix (0, 0), matrix (0, 1), matrix (0, 2));
+  // printf ("R = | %6.3f %6.3f %6.3f | \n", matrix (1, 0), matrix (1, 1), matrix (1, 2));
+  // printf ("    | %6.3f %6.3f %6.3f | \n", matrix (2, 0), matrix (2, 1), matrix (2, 2));
+  // printf ("Translation vector :\n");
+  // printf ("t = < %6.3f, %6.3f, %6.3f >\n\n", matrix (0, 3), matrix (1, 3), matrix (2, 3));
+  printf ("Translation[m]: x = %6.3f, y =  %6.3f, Yaw [rad] = %6.3f\n\n", matrix (0, 3), matrix (1, 3),acos(matrix (0, 0)));
+}
+
 void callback(const sensor_msgs::PointCloud2ConstPtr &cloud_in)
 {
-  ROS_INFO("Cloud: width = %d, height = %d\n", cloud_in->width, cloud_in->height);
+  // ROS_INFO("Cloud: width = %d, height = %d\n", cloud_in->width, cloud_in->height);
 
   pcl::PCLPointCloud2 in_pcl_pc2;
   pcl_conversions::toPCL(*cloud_in, in_pcl_pc2);
@@ -28,9 +40,12 @@ void callback(const sensor_msgs::PointCloud2ConstPtr &cloud_in)
   pcl::PointCloud<pcl::PointXYZ> Final;
   icp.align(Final);
   // ROS_INFO(""has converged:" %d, height = %d\n", cloud_in->width, cloud_in->height);
-  std::cout << "has converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << std::endl;
-  std::cout << icp.getFinalTransformation() << std::endl;
+  // std::cout << "has converged:" << icp.hasConverged() << " score: " << icp.getFitnessScore() << std::endl;
+  // std::cout << icp.getFinalTransformation() << std::endl;
+
+  print4x4Matrix(icp.getFinalTransformation());
 }
+
 
 int main(int argc, char **argv)
 {
